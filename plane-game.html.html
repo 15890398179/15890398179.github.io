@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>手机打飞机</title>
+    <style>
+        canvas {
+            background: #000;
+            touch-action: none; /* 禁止默认触摸行为 */
+        }
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 60px;
+            font-size: 24px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="controls">
+        <div class="btn" id="leftBtn">←</div>
+        <div class="btn" id="shootBtn">🔥</div>
+        <div class="btn" id="rightBtn">→</div>
+    </div>
+
+    <script>
+        // 自动适应屏幕大小
+        const canvas = document.getElementById('gameCanvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+
+        // 触摸控制逻辑
+        let touchX = 0;
+        let isMovingLeft = false;
+        let isMovingRight = false;
+        let isShooting = false;
+
+        // 移动按钮事件
+        document.getElementById('leftBtn').addEventListener('touchstart', () => isMovingLeft = true);
+        document.getElementById('leftBtn').addEventListener('touchend', () => isMovingLeft = false);
+        document.getElementById('rightBtn').addEventListener('touchstart', () => isMovingRight = true);
+        document.getElementById('rightBtn').addEventListener('touchend', () => isMovingRight = false);
+        document.getElementById('shootBtn').addEventListener('touchstart', () => isShooting = true);
+        document.getElementById('shootBtn').addEventListener('touchend', () => isShooting = false);
+
+        // 滑动控制（可选）
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            touchX = e.touches[0].clientX;
+        });
+
+        // 修改原有的update函数
+        function update() {
+            // 按钮控制
+            if(isMovingLeft) game.player.x -= game.player.speed;
+            if(isMovingRight) game.player.x += game.player.speed;
+            
+            // 滑动控制（二选一）
+            // game.player.x = touchX - game.player.width/2;
+
+            // 保持边界
+            game.player.x = Math.max(0, Math.min(canvas.width - game.player.width, game.player.x));
+            
+            // 手机端射击间隔调整
+            if(isShooting && Date.now() % 5 === 0) {
+                // 生成子弹代码...
+            }
+        }
+
+        // 其他游戏逻辑保持不变...
+    </script>
+</body>
+</html>
